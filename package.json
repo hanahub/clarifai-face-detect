@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "babel-polyfill": "^6.26.0",
+    "clarifai": "^2.9.0",
     "history": "^4.7.2",
     "hoist-non-react-statics": "^2.5.0",
     "invariant": "^2.2.4",

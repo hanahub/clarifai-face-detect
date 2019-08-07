@@ -5,8 +5,6 @@ import { Helmet } from 'react-helmet';
 import { Switch, Route } from 'react-router-dom';
 
 import Home from 'containers/Home';
-import Game from 'containers/Game';
-import Result from 'containers/Result';
 
 import 'styles/containers/app.css';
 
@@ -15,13 +13,11 @@ export default function App() {
     <MuiThemeProvider>
       <div className="app">
         <Helmet>
-          <meta name="description" content="Simple QA Game" />
-          <title>Oscar Test - Simple QA Game Challenge</title>
+          <meta name="description" content="Simple Clarifai Demo" />
+          <title>Clarifai Test - Simple Clarifai Challenge</title>
         </Helmet>
         <Switch>
           <Route exact path="/" component={Home} />
-          <Route exact path="/game" component={Game} />
-          <Route exact path="/result" component={Result} />
           <Route path="" component={Home} />
         </Switch>
         <ReduxToastr
