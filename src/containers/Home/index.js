@@ -24,7 +24,8 @@ class Home extends React.PureComponent { // eslint-disable-line react/prefer-sta
       mainImage: null,
       width: 0,
       height: 0,
-      regions: []
+      regions: [],
+      loading: false
     };
   }
 
@@ -43,22 +44,22 @@ class Home extends React.PureComponent { // eslint-disable-line react/prefer-sta
   }
 
   begin(event) {
-    // this.props.loadQuestions();
     const input = event.target.files;
     const _this = this;
 
+    this.setState({loading: true});
+
     if (input && input[0]) {
-      var reader = new FileReader();
-      var file = input[0];
+      let reader = new FileReader();
+      let file = input[0];
 
       reader.onload = function (e) {
-        var _URL = window.URL || window.webkitURL;
-        var img = new Image();
-        var src = e.target.result;
+        let _URL = window.URL || window.webkitURL;
+        let img = new Image();
+        let src = e.target.result;
     
         img.src = _URL.createObjectURL(file);
         img.onload = function() {
-          console.log('onload');
           _this.setState({
             mainImage: src,
             width: this.width,
@@ -70,10 +71,8 @@ class Home extends React.PureComponent { // eslint-disable-line react/prefer-sta
 
           app.models.predict('a403429f2ddf4b49b307e318f00e528b', {base64: input}).then(
             function(response) {
-              // do something with response
-              console.log(response);
               if (response.outputs && response.outputs[0]) {
-                _this.setState({ regions: response.outputs[0].data.regions });
+                _this.setState({ regions: response.outputs[0].data.regions, loading: false });
               }
             },
             function(err) {
@@ -91,7 +90,8 @@ class Home extends React.PureComponent { // eslint-disable-line react/prefer-sta
   render() {
     const { 
       mainImage,
-      regions
+      regions,
+      loading
     } = this.state;
 
     return (
@@ -101,13 +101,17 @@ class Home extends React.PureComponent { // eslint-disable-line react/prefer-sta
           <input type="file" name="file" onChange={this.begin} accept="image/jpg, image/jpeg, image/png"/>
         </label>
         
+        {loading &&
+          <div className="loading">Loading...</div>
+        }
+        
         <div className="wrapper">
           <div id="preview">
             <img id="preview-img" src={mainImage} />
           </div>
 
           <section className="model-section">
-            {regions.length > 0 && (
+            {regions && regions.length > 0 && (
               <div>
                 <ul className="model-container-tag-list face-model-list">
                   {regions.map((concept, index) => {
@@ -142,14 +146,14 @@ class Home extends React.PureComponent { // eslint-disable-line react/prefer-sta
           </section>
         </div>
 
-        {regions.length > 0 && (
+        {regions && regions.length > 0 ? (
           <div>
             <h5 className="region-thumbs-header">
               {regions.length} face
               {regions.length > 1 ? 's' : ''} detected
             </h5>
           </div>
-        )}
+        ): <p>No faces detected!</p>}
 
       </Card>
     );
